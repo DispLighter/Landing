@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>KLKMN</title>
+  <meta name="description" content="KLKMN">
+  <meta name="theme-color" content="#151515">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23151515'/%3E%3Ctext x='50' y='74' font-size='72' font-weight='700' text-anchor='middle' fill='white' font-family='Helvetica,Arial,sans-serif'%3EK%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #151515;
+      --fg: #ffffff;
+      --muted: #8c8c8c;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    *, *::before, *::after { box-sizing: inherit; }
+    html { height: 100%; background: var(--bg); color-scheme: dark; }
+    body {
+      margin: 0;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: clamp(3rem, 21vw, 22rem);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+    }
+    .tm {
+      font-size: 0.16em;
+      font-weight: 700;
+      letter-spacing: 0;
+      vertical-align: top;
+      position: relative;
+      top: 0.3em;
+      margin-left: 0.25em;
+    }
+    footer {
+      padding: 1.5rem 1rem 2rem;
+      text-align: center;
+      font-size: 0.75rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+    footer p { margin: 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>KLKMN<sup class="tm">TM</sup></h1>
+  </main>
+  <footer>
+    <p>&copy; <span id="year">2026</span> KLKMN. All rights reserved.</p>
+    <p>KLKMN&trade; is a trademark. Unauthorized use, reproduction or distribution is prohibited.</p>
+  </footer>
+  <script>
+    try { document.getElementById("year").textContent = new Date().getFullYear(); } catch (e) {}
+  </script>
+</body>
+</html>
