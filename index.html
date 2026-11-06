@@ -1,21 +1,204 @@
-<div class="countdown" id="countdown">
-  <div class="countdown-line">
-    <span class="countdown-number" id="days">0</span>
-    <span class="countdown-label"> days left</span>
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>KLKMN</title>
+  <meta name="description" content="KLKMN">
+  <meta name="theme-color" content="#151515">
 
-  <div class="countdown-line">
-    <span class="countdown-number" id="hours">0</span>
-    <span class="countdown-label"> hours left</span>
-  </div>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23151515'/%3E%3Ctext x='50' y='74' font-size='72' font-weight='700' text-anchor='middle' fill='white' font-family='Helvetica,Arial,sans-serif'%3EK%3C/text%3E%3C/svg%3E">
 
-  <div class="countdown-line">
-    <span class="countdown-number" id="minutes">0</span>
-    <span class="countdown-label"> minutes left</span>
-  </div>
+  <style>
+    :root {
+      --bg: #151515;
+      --fg: #ffffff;
+      --muted: #8c8c8c;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
 
-  <div class="countdown-line">
-    <span class="countdown-number" id="seconds">0</span>
-    <span class="countdown-label"> seconds left</span>
-  </div>
-</div>
+    *, *::before, *::after {
+      box-sizing: inherit;
+    }
+
+    html {
+      height: 100%;
+      background: var(--bg);
+      color-scheme: dark;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      gap: 1.2rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: clamp(3rem, 21vw, 22rem);
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+    }
+
+    .tm {
+      font-size: 0.16em;
+      font-weight: 700;
+      letter-spacing: 0;
+      vertical-align: top;
+      position: relative;
+      top: 0.3em;
+      margin-left: 0.25em;
+    }
+
+    .countdown {
+      font-size: clamp(0.85rem, 3vw, 1.5rem);
+      font-weight: 700;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.02em;
+      text-align: center;
+    }
+
+    .countdown-line {
+      line-height: 1.7;
+    }
+
+    .countdown-number {
+      color: #ff4fd8;
+    }
+
+    .countdown-label {
+      color: #35e6d3;
+    }
+
+    .countdown-finished {
+      font-size: clamp(0.85rem, 3vw, 1.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    footer {
+      padding: 1.5rem 1rem 2rem;
+      text-align: center;
+      font-size: 0.75rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    footer p {
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>KLKMN<sup class="tm">TM</sup></h1>
+
+    <div class="countdown" id="countdown">
+      <div class="countdown-line">
+        <span class="countdown-number" id="days">0</span>
+        <span class="countdown-label"> days left</span>
+      </div>
+
+      <div class="countdown-line">
+        <span class="countdown-number" id="hours">0</span>
+        <span class="countdown-label"> hours left</span>
+      </div>
+
+      <div class="countdown-line">
+        <span class="countdown-number" id="minutes">0</span>
+        <span class="countdown-label"> minutes left</span>
+      </div>
+
+      <div class="countdown-line">
+        <span class="countdown-number" id="seconds">0</span>
+        <span class="countdown-label"> seconds left</span>
+      </div>
+    </div>
+
+    <div class="countdown-finished" id="finished" hidden>
+      <span class="countdown-number">Let's</span>
+      <span class="countdown-label"> go...</span>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; <span id="year">2026</span> KLKMN. All rights reserved.</p>
+    <p>KLKMN&trade; is a trademark. Unauthorized use, reproduction or distribution is prohibited.</p>
+  </footer>
+
+  <script>
+    try {
+      document.getElementById("year").textContent =
+        new Date().getFullYear();
+
+      // November 19, 2026 at 00:00 Amsterdam time (CET)
+      const target = new Date("2026-11-19T00:00:00+01:00").getTime();
+
+      const countdown = document.getElementById("countdown");
+      const finished = document.getElementById("finished");
+
+      const formatter = new Intl.NumberFormat("de-DE");
+
+      const counters = {
+        days: document.getElementById("days"),
+        hours: document.getElementById("hours"),
+        minutes: document.getElementById("minutes"),
+        seconds: document.getElementById("seconds")
+      };
+
+      function updateCountdown() {
+        const remaining = Math.max(0, target - Date.now());
+
+        if (remaining === 0) {
+          countdown.hidden = true;
+          finished.hidden = false;
+          return;
+        }
+
+        counters.days.textContent =
+          formatter.format(Math.ceil(remaining / 86400000));
+
+        counters.hours.textContent =
+          formatter.format(Math.ceil(remaining / 3600000));
+
+        counters.minutes.textContent =
+          formatter.format(Math.ceil(remaining / 60000));
+
+        counters.seconds.textContent =
+          formatter.format(Math.ceil(remaining / 1000));
+
+        setTimeout(
+          updateCountdown,
+          1000 - (Date.now() % 1000)
+        );
+      }
+
+      updateCountdown();
+
+    } catch (e) {}
+  </script>
+</body>
+</html>
