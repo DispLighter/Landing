@@ -14,6 +14,8 @@
       --bg: #151515;
       --fg: #ffffff;
       --muted: #8c8c8c;
+      --pink: #ff4fd8;
+      --cyan: #35e6d3;
       box-sizing: border-box;
       padding-top: env(safe-area-inset-top, 0px);
       padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -31,12 +33,12 @@
 
     body {
       margin: 0;
-      min-height: 100%;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       background: var(--bg);
       color: var(--fg);
-      font-family: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
     }
@@ -44,57 +46,43 @@
     main {
       flex: 1;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 2rem 1rem;
-      gap: 1.2rem;
-    }
-
-    h1 {
-      margin: 0;
-      font-weight: 700;
-      font-size: clamp(3rem, 21vw, 22rem);
-      line-height: 0.85;
-      letter-spacing: -0.04em;
-      white-space: nowrap;
-    }
-
-    .tm {
-      font-size: 0.16em;
-      font-weight: 700;
-      letter-spacing: 0;
-      vertical-align: top;
-      position: relative;
-      top: 0.3em;
-      margin-left: 0.25em;
+      width: 100%;
     }
 
     .countdown {
-      font-size: clamp(0.85rem, 3vw, 1.5rem);
-      font-weight: 700;
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: clamp(0.5rem, 2vw, 1.5rem);
+      flex-wrap: nowrap;
       white-space: nowrap;
+      font-size: clamp(0.65rem, 3.1vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
       font-variant-numeric: tabular-nums;
-      letter-spacing: -0.02em;
-      text-align: center;
     }
 
-    .countdown-line {
-      line-height: 1.7;
+    .countdown-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.18em;
     }
 
     .countdown-number {
-      color: #ff4fd8;
+      color: var(--pink);
     }
 
     .countdown-label {
-      color: #35e6d3;
+      color: var(--cyan);
     }
 
     .countdown-finished {
-      font-size: clamp(0.85rem, 3vw, 1.5rem);
+      font-size: clamp(1.5rem, 6vw, 3rem);
       font-weight: 700;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.04em;
       white-space: nowrap;
     }
 
@@ -114,27 +102,25 @@
 
 <body>
   <main>
-    <h1>KLKMN<sup class="tm">TM</sup></h1>
-
     <div class="countdown" id="countdown">
-      <div class="countdown-line">
+      <div class="countdown-item">
         <span class="countdown-number" id="days">0</span>
-        <span class="countdown-label"> days left</span>
+        <span class="countdown-label">days</span>
       </div>
 
-      <div class="countdown-line">
+      <div class="countdown-item">
         <span class="countdown-number" id="hours">0</span>
-        <span class="countdown-label"> hours left</span>
+        <span class="countdown-label">hours</span>
       </div>
 
-      <div class="countdown-line">
+      <div class="countdown-item">
         <span class="countdown-number" id="minutes">0</span>
-        <span class="countdown-label"> minutes left</span>
+        <span class="countdown-label">minutes</span>
       </div>
 
-      <div class="countdown-line">
+      <div class="countdown-item">
         <span class="countdown-number" id="seconds">0</span>
-        <span class="countdown-label"> seconds left</span>
+        <span class="countdown-label">seconds</span>
       </div>
     </div>
 
@@ -150,55 +136,48 @@
   </footer>
 
   <script>
-    try {
-      document.getElementById("year").textContent =
-        new Date().getFullYear();
+    const target = new Date("2026-11-19T00:00:00+01:00").getTime();
 
-      // November 19, 2026 at 00:00 Amsterdam time (CET)
-      const target = new Date("2026-11-19T00:00:00+01:00").getTime();
+    const countdown = document.getElementById("countdown");
+    const finished = document.getElementById("finished");
 
-      const countdown = document.getElementById("countdown");
-      const finished = document.getElementById("finished");
+    const formatter = new Intl.NumberFormat("de-DE");
 
-      const formatter = new Intl.NumberFormat("de-DE");
+    const counters = {
+      days: document.getElementById("days"),
+      hours: document.getElementById("hours"),
+      minutes: document.getElementById("minutes"),
+      seconds: document.getElementById("seconds")
+    };
 
-      const counters = {
-        days: document.getElementById("days"),
-        hours: document.getElementById("hours"),
-        minutes: document.getElementById("minutes"),
-        seconds: document.getElementById("seconds")
-      };
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
 
-      function updateCountdown() {
-        const remaining = Math.max(0, target - Date.now());
+    function updateCountdown() {
+      const remaining = Math.max(0, target - Date.now());
 
-        if (remaining === 0) {
-          countdown.hidden = true;
-          finished.hidden = false;
-          return;
-        }
-
-        counters.days.textContent =
-          formatter.format(Math.ceil(remaining / 86400000));
-
-        counters.hours.textContent =
-          formatter.format(Math.ceil(remaining / 3600000));
-
-        counters.minutes.textContent =
-          formatter.format(Math.ceil(remaining / 60000));
-
-        counters.seconds.textContent =
-          formatter.format(Math.ceil(remaining / 1000));
-
-        setTimeout(
-          updateCountdown,
-          1000 - (Date.now() % 1000)
-        );
+      if (remaining === 0) {
+        countdown.hidden = true;
+        finished.hidden = false;
+        return;
       }
 
-      updateCountdown();
+      counters.days.textContent =
+        formatter.format(Math.ceil(remaining / 86400000));
 
-    } catch (e) {}
+      counters.hours.textContent =
+        formatter.format(Math.ceil(remaining / 3600000));
+
+      counters.minutes.textContent =
+        formatter.format(Math.ceil(remaining / 60000));
+
+      counters.seconds.textContent =
+        formatter.format(Math.ceil(remaining / 1000));
+
+      setTimeout(updateCountdown, 1000 - (Date.now() % 1000));
+    }
+
+    updateCountdown();
   </script>
 </body>
 </html>
