@@ -104,22 +104,22 @@
   <main>
     <div class="countdown" id="countdown">
       <div class="countdown-item">
-        <span class="countdown-number" id="days">0</span>
+        <span class="countdown-number" id="days">00</span>
         <span class="countdown-label">days</span>
       </div>
 
       <div class="countdown-item">
-        <span class="countdown-number" id="hours">0</span>
+        <span class="countdown-number" id="hours">00</span>
         <span class="countdown-label">hours</span>
       </div>
 
       <div class="countdown-item">
-        <span class="countdown-number" id="minutes">0</span>
+        <span class="countdown-number" id="minutes">00</span>
         <span class="countdown-label">minutes</span>
       </div>
 
       <div class="countdown-item">
-        <span class="countdown-number" id="seconds">0</span>
+        <span class="countdown-number" id="seconds">00</span>
         <span class="countdown-label">seconds</span>
       </div>
     </div>
@@ -141,8 +141,6 @@
     const countdown = document.getElementById("countdown");
     const finished = document.getElementById("finished");
 
-    const formatter = new Intl.NumberFormat("de-DE");
-
     const counters = {
       days: document.getElementById("days"),
       hours: document.getElementById("hours"),
@@ -162,17 +160,17 @@
         return;
       }
 
-      counters.days.textContent =
-        formatter.format(Math.ceil(remaining / 86400000));
+      const totalSeconds = Math.floor(remaining / 1000);
 
-      counters.hours.textContent =
-        formatter.format(Math.ceil(remaining / 3600000));
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
 
-      counters.minutes.textContent =
-        formatter.format(Math.ceil(remaining / 60000));
-
-      counters.seconds.textContent =
-        formatter.format(Math.ceil(remaining / 1000));
+      counters.days.textContent = String(days).padStart(2, "0");
+      counters.hours.textContent = String(hours).padStart(2, "0");
+      counters.minutes.textContent = String(minutes).padStart(2, "0");
+      counters.seconds.textContent = String(seconds).padStart(2, "0");
 
       setTimeout(updateCountdown, 1000 - (Date.now() % 1000));
     }
